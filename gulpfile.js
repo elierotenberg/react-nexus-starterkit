@@ -72,7 +72,7 @@ gulp.task('build', ['clean'], function() {
   return gulp.src(['src/**/*.js', 'src/**/*.jsx'])
   .pipe(plumber())
   .pipe(DEV ? sourcemaps.init() : gutil.noop())
-  .pipe(insert.prepend('require(\'6to5/polyfill\');\nconst Promise = require(\'bluebird\');\n'))
+  .pipe(insert.prepend('require(\'6to5/polyfill\');\nconst Promise = require(\'bluebird\'); const __DEV__ = (process.env.NODE_ENV !== \'production\');\n'))
   .pipe(rename({ extname: '.js' }))
   .pipe(es6to5())
   .pipe(DEV ? sourcemaps.write() : gutil.noop())
