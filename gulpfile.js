@@ -1,7 +1,6 @@
 var __NODE__ = !__BROWSER__; var __BROWSER__ = (typeof window === "object"); var __PROD__ = !__DEV__; var __DEV__ = (process.env.NODE_ENV !== "production"); var Promise = require("lodash-next").Promise; require("6to5/polyfill");
 var _ = require('lodash-next');
 
-var addsrc = require('gulp-add-src');
 var autoprefixer = require('autoprefixer-core')({ cascade: true });
 var buffer = require('vinyl-buffer');
 var concat = require('gulp-concat');
@@ -47,9 +46,8 @@ else {
 gulp.task('clean', function(fn) {
   del([
     'dist',
-    'public/native.history.js', 'public/normalize.css',
-    'public/p.js', 'public/c.js', 'public/p.css', 'public/p.js',
-    'public/p.min.js', 'public/c.min.js', 'public/p.min.css', 'public/p.min.js',
+    'public/p.js', 'public/p.min.js',
+    'public/p.css', 'public/p.min.css',
   ], fn);
 });
 
@@ -118,12 +116,8 @@ gulp.task('bundle', ['compile'], function() {
 });
 
 gulp.task('componentsCSS', ['compile'], function() {
-  return gulp.src('src/**/*.jsx', { base: '.' })
+  return gulp.src('dist/components/**/*.js')
   .pipe(plumber())
-  .pipe(rename(function(p) {
-    p.dirname = path.join(__dirname, p.dirname.replace(/^src/, 'dist'));
-    p.extname = ".js";
-  }))
   .pipe(style())
   .pipe(__DEV__ ? sourcemaps.init() : gutil.noop())
   .pipe(concat('c.css'))
@@ -133,22 +127,12 @@ gulp.task('componentsCSS', ['compile'], function() {
   .pipe(gulp.dest('dist'));
 });
 
-gulp.task('public', ['componentsCSS', 'bundle'], function() {
+gulp.task('packJS', ['componentsCSS', 'bundle'], function() {
   return gulp.src([
-    'bower_components/history.js/scripts/bundled/html4+html5/native.history.js',
-    'bower_components/normalize.css/normalize.css',
+    'bower_components/history.js/scripts/bundled-uncompressed/html4+html5/native.history.js',
     'dist/c.js',
-    'dist/c.css',
   ])
   .pipe(plumber())
-  .pipe(gulp.dest('public'));
-});
-
-gulp.task('packJS', ['public'], function() {
-  return gulp.src(['public/**/*.js', '!public/p.js', '!public/p.min.js', '!public/c.js'])
-  .pipe(plumber())
-  // Add c.js later so that it always gets evaluated last
-  .pipe(addsrc('public/c.js'))
   // Wrap each file in an IIFE.
   .pipe(wrap('(function() {\n<%= contents %>\n})();\n'))
   .pipe(concat('p.js'))
@@ -161,11 +145,11 @@ gulp.task('packJS', ['public'], function() {
   .pipe(gulp.dest('public'));
 });
 
-gulp.task('packCSS', ['public'], function() {
-  return gulp.src(['public/**/*.css', '!public/p.css', '!public/p.min.css', '!public/c.css'])
+gulp.task('packCSS', ['componentsCSS', 'bundle'], function() {
+  return gulp.src([
+    'dist/c.css',
+  ])
   .pipe(plumber())
-  // Add c.css later so that it always gets evaluated last
-  .pipe(addsrc('public/c.css'))
   .pipe(concat('p.css'))
   .pipe(__DEV__ ? gutil.noop() : postcss([cssmqpacker, csswring]))
   .pipe(__DEV__ ? gutil.noop() : rename({ extname: '.min.css' }))
@@ -175,10 +159,7 @@ gulp.task('packCSS', ['public'], function() {
 gulp.task('pack', ['packJS', 'packCSS']);
 
 gulp.task('finalize', ['pack'], function(fn) {
-  if(__DEV__) {
-    return fn(null);
-  }
-  del(['public/c.css', 'public/c.js', 'public/native.history.js', 'public/normalize.css'], fn);
+  fn();
 });
 
 gulp.task('default', ['finalize']);

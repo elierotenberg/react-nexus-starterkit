@@ -4,27 +4,19 @@ const Uplink = require('nexus-uplink-client');
 
 const common = require('./common');
 
-const memoryActionHandlers = () => ({
-
-});
-
-const uplinkActionHandlers = () => ({
-
-});
-
 class Flux extends R.Flux {
   *bootstrap() { // jshint ignore:line
     this
     .registerStore('memory', new R.Store.MemoryStore())
     .registerEventEmitter('memory', new R.EventEmitter.MemoryEventEmitter())
-    .registerDispatcher('memory', new R.Dispatcher(memoryActionHandlers(this)));
+    .registerDispatcher('memory', new R.Dispatcher());
 
     const uplink = this.uplink = new Uplink({ url: common.uplink.url, guid: this.guid });
 
     this
     .registerStore('uplink', new R.Store.UplinkStore({ uplink }))
     .registerEventEmitter('uplink', new R.EventEmitter.UplinkEventEmitter({ uplink }))
-    .registerDispatcher('uplink', new R.Dispatcher(uplinkActionHandlers(this)));
+    .registerDispatcher('uplink', new R.Dispatcher(R.Dispatcher.UplinkDispatcher({ uplink })));
   }
 
   destroy() {

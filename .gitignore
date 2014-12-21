@@ -1,5 +1,10 @@
 node_modules
 tmp
+public/p.js
+public/p.min.js
+public/p.css
+public/p.min.css
+dist
 *.pid
 *.lock
 npm-debug.log

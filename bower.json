@@ -14,7 +14,6 @@
     "tests"
   ],
   "dependencies": {
-    "history.js": "~1.8.0",
-    "normalize.css": "~3.0.2"
+    "history.js": "~1.8.0"
   }
 }

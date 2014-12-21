@@ -18,14 +18,6 @@ var Uplink = require("nexus-uplink-client");
 
 var common = require("./common");
 
-var memoryActionHandlers = function () {
-  return ({});
-};
-
-var uplinkActionHandlers = function () {
-  return ({});
-};
-
 var Flux = (function (R) {
   var Flux = function Flux() {
     R.Flux.apply(this, arguments);
@@ -39,12 +31,12 @@ var Flux = (function (R) {
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (true) switch (_context.prev = _context.next) {
         case 0: // jshint ignore:line
-          _this.registerStore("memory", new R.Store.MemoryStore()).registerEventEmitter("memory", new R.EventEmitter.MemoryEventEmitter()).registerDispatcher("memory", new R.Dispatcher(memoryActionHandlers(_this)));
+          _this.registerStore("memory", new R.Store.MemoryStore()).registerEventEmitter("memory", new R.EventEmitter.MemoryEventEmitter()).registerDispatcher("memory", new R.Dispatcher());
 
           uplink = _this.uplink = new Uplink({ url: common.uplink.url, guid: _this.guid });
 
 
-          _this.registerStore("uplink", new R.Store.UplinkStore({ uplink: uplink })).registerEventEmitter("uplink", new R.EventEmitter.UplinkEventEmitter({ uplink: uplink })).registerDispatcher("uplink", new R.Dispatcher(uplinkActionHandlers(_this)));
+          _this.registerStore("uplink", new R.Store.UplinkStore({ uplink: uplink })).registerEventEmitter("uplink", new R.EventEmitter.UplinkEventEmitter({ uplink: uplink })).registerDispatcher("uplink", new R.Dispatcher(R.Dispatcher.UplinkDispatcher({ uplink: uplink })));
         case 3:
         case "end": return _context.stop();
       }
