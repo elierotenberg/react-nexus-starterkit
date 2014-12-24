@@ -36,7 +36,7 @@ var Flux = (function (R) {
           uplink = _this.uplink = new Uplink({ url: common.uplink.url, guid: _this.guid });
 
 
-          _this.registerStore("uplink", new R.Store.UplinkStore({ uplink: uplink })).registerEventEmitter("uplink", new R.EventEmitter.UplinkEventEmitter({ uplink: uplink })).registerDispatcher("uplink", new R.Dispatcher(R.Dispatcher.UplinkDispatcher({ uplink: uplink })));
+          _this.registerStore("uplink", new R.Store.UplinkStore({ uplink: uplink })).registerEventEmitter("uplink", new R.EventEmitter.UplinkEventEmitter({ uplink: uplink })).registerDispatcher("uplink", new R.Dispatcher.UplinkDispatcher({ uplink: uplink }));
         case 3:
         case "end": return _context.stop();
       }

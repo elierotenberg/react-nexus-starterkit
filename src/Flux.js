@@ -16,7 +16,7 @@ class Flux extends R.Flux {
     this
     .registerStore('uplink', new R.Store.UplinkStore({ uplink }))
     .registerEventEmitter('uplink', new R.EventEmitter.UplinkEventEmitter({ uplink }))
-    .registerDispatcher('uplink', new R.Dispatcher(R.Dispatcher.UplinkDispatcher({ uplink })));
+    .registerDispatcher('uplink', new R.Dispatcher.UplinkDispatcher({ uplink }));
   }
 
   destroy() {
